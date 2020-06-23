@@ -21,19 +21,19 @@ for entry in search_results:
     titles.append(title)
     # Collect the event to get the time
     event = entry['events']
+    # Grab only the first part of the long string
     event_part = event[1:92]
+    # Split it based on the quote sign
     splitted_line = re.split('"', event_part)
+    # Grab the start time and add it to our list
     start = splitted_line[3]
     starts.append(start)
-    # Collect the url and create a clickable link
+    # Collect the url and create a clickable link including the title and the 
+    # start time (UTC) of the event
     url = entry['web_url']
     web_url = f"<a href='https://learning.oreilly.com{url}'>{start} - {title}</a><br>"
     web_urls.append(web_url)
     
-
-
-
-
 
 #Create an HTML file for testing
 filename = 'python_online.html'
