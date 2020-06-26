@@ -1,19 +1,23 @@
 import requests
 import re
+import pandas as pd
 
-# Make an API call and store the response.
-url = 'https://learning.oreilly.com/api/v2/search/?query=python&extended_publisher_data=true&source=user&formats=live%20online%20training&limit=100'
+# This is the search term you want search on the platform 
+search_term = 'python'
+
+# Make an API call for the search and store the response.
+url = f'https://learning.oreilly.com/api/v2/search/?query={search_term}&extended_publisher_data=true&source=user&formats=live%20online%20training&limit=200'
 r = requests.get(url)
 print(f"Status code: {r.status_code}")
 
-# Store API' JSON response in a dictopnary
+# Store API' JSON response in a dictonary
 response_dict = r.json()
 
 # Store the results part of the response
 search_results = response_dict['results']
 
 # Define what to store
-titles, web_urls, starts = [], [], []
+titles, web_urls, starts, ends = [], [], [], []
 
 for entry in search_results:
     # Collect the title
@@ -28,14 +32,21 @@ for entry in search_results:
     # Grab the start time and add it to our list
     start = splitted_line[3]
     starts.append(start)
-    # Collect the url and create a clickable link including the title and the 
-    # start time (UTC) of the event
+    # Grab the end time and add it to our list
+    end = splitted_line[7]
+    ends.append(end)
+    # Collect the url and append it to the base url then add to a list
     url = entry['web_url']
-    web_url = f"<a href='https://learning.oreilly.com{url}'>{start} - {title}</a><br>"
+    web_url = f'https://learning.oreilly.com{url}'
     web_urls.append(web_url)
-    
 
-#Create an HTML file for testing
-filename = 'python_online.html'
-with open(filename, 'w') as f:
-    print(web_urls, file=f)
+# Add the lists to a dataframe
+df = pd.DataFrame(list(zip(starts, ends, titles, web_urls)),
+                columns=['Start', 'End', 'Title', 'URL'])
+
+
+
+
+# Save as an Excel file
+filename = f'oreilly_{search_term}_online_educations.xlsx'
+df.to_excel(filename)
