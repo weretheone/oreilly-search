@@ -1,6 +1,7 @@
 import requests
 import re
 import pandas as pd
+import numpy as np
 
 # This is the search term you want search on the platform 
 search_term = 'python'
@@ -42,9 +43,16 @@ for entry in search_results:
 
 # Add the lists to a dataframe
 df = pd.DataFrame(list(zip(starts, ends, titles, web_urls)),
-                columns=['Start', 'End', 'Title', 'URL'])
-
-
+                columns = ['Start', 'End', 'Title', 'URL'])
+# Sort the values on 'Start time'
+df.sort_values(by = ['Start'], inplace=True, ignore_index=True)
+# Modify datatype for start and end time
+df[['Start','End']] = df[['Start','End']].astype('datetime64')
+# Add my timezone difference +2 (CET) 
+df['Start'] = df['Start'] + np.timedelta64(2, 'h')
+df['End'] = df['End'] + np.timedelta64(2, 'h')
+# Add duration
+df['Duration'] = df['End'] - df['Start']
 
 
 # Save as an Excel file
