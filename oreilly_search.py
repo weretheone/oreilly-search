@@ -38,7 +38,8 @@ for entry in search_results:
     ends.append(end)
     # Collect the url and append it to the base url then add to a list
     url = entry['web_url']
-    web_url = f'https://learning.oreilly.com{url}'
+    web_url = f' <a href="https://learning.oreilly.com{url}">{title}</a> '
+    #web_url = f'https://learning.oreilly.com{url}'
     web_urls.append(web_url)
 
 # Add the lists to a dataframe
@@ -51,10 +52,21 @@ df[['Start','End']] = df[['Start','End']].astype('datetime64')
 # Add my timezone difference +2 (CET) 
 df['Start'] = df['Start'] + np.timedelta64(2, 'h')
 df['End'] = df['End'] + np.timedelta64(2, 'h')
-# Add duration
-df['Duration'] = df['End'] - df['Start']
+# Calculate duration
+duration = df['End'] - df['Start']
+# Grab the Hours and minutes part
+hours = duration.dt.components['hours']
+minutes = duration.dt.components['minutes']
+# Convert them to string
+hours = hours.astype(str)
+minutes = minutes.astype(str)
+# Format and add the created column
+duration= hours + 'h ' + minutes +'m'
+df.insert(loc = 1, column = 'Duration', value = duration)
 
 
-# Save as an Excel file
-filename = f'oreilly_{search_term}_online_educations.xlsx'
-df.to_excel(filename)
+# Slice what you want as output
+df_final=  df[['Start', 'Duration', 'URL']].copy()
+# Save as a HTML file
+filename = f'oreilly_{search_term}_online_educations.html'
+df_final.to_html(filename, render_links=True, escape=False,)
