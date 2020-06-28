@@ -10,5 +10,6 @@ If you want to search for example for the string *"Python"*, then you get the re
 
 ![sort options](pictures/sort_options.png)
 
-The **oreilly.py** will help in creating a list with a search string in an ordered fashion, from which, you can easily choose something for a specified date.
-Currently it creates an Excel sheet with the requested data.
+The **oreilly_search.py** will help in creating a list with a search string in an ordered fashion, from which, you can easily choose something for a specified date. It calculates the duration of the session and creates an HTML file with the requested data. Example of the result HTML below:
+
+![result](pictures/result.png)
