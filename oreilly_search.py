@@ -17,7 +17,7 @@ response_dict = r.json()
 # Store the results part of the response
 search_results = response_dict['results']
 
-# Define what to store
+# Define lists for the things you want to store
 titles, web_urls, starts, ends = [], [], [], []
 
 for entry in search_results:
@@ -26,7 +26,7 @@ for entry in search_results:
     titles.append(title)
     # Collect the event to get the time
     event = entry['events']
-    # Grab only the first part of the long string
+    # Grab only the first part of the long event string
     event_part = event[1:92]
     # Split it based on the quote sign
     splitted_line = re.split('"', event_part)
@@ -61,12 +61,11 @@ minutes = duration.dt.components['minutes']
 hours = hours.astype(str)
 minutes = minutes.astype(str)
 # Format and add the created column
-duration= hours + 'h ' + minutes +'m'
+duration= hours + 'h ' + minutes + 'm'
 df.insert(loc = 1, column = 'Duration', value = duration)
 
 
-# Slice what you want as output
+# Slice what you want as output and save as HTML
 df_final=  df[['Start', 'Duration', 'URL']].copy()
-# Save as a HTML file
 filename = f'oreilly_{search_term}_online_educations.html'
 df_final.to_html(filename, render_links=True, escape=False,)
