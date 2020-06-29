@@ -18,7 +18,7 @@ response_dict = r.json()
 search_results = response_dict['results']
 
 # Define lists for the things you want to store
-titles, web_urls, starts, ends = [], [], [], []
+titles, web_urls, starts, ends, authors = [], [], [], [], []
 
 for entry in search_results:
     # Collect the title
@@ -41,10 +41,13 @@ for entry in search_results:
     web_url = f' <a href="https://learning.oreilly.com{url}">{title}</a> '
     #web_url = f'https://learning.oreilly.com{url}'
     web_urls.append(web_url)
+    # Grab the author and add it to the list
+    author = entry['authors']
+    authors.append(author)
 
 # Add the lists to a dataframe
-df = pd.DataFrame(list(zip(starts, ends, titles, web_urls)),
-                columns = ['Start', 'End', 'Title', 'URL'])
+df = pd.DataFrame(list(zip(starts, ends, titles, web_urls, authors)),
+                columns = ['Start', 'End', 'Title', 'URL', 'Presenter'])
 # Sort the values on 'Start time'
 df.sort_values(by = ['Start'], inplace=True, ignore_index=True)
 # Modify datatype for start and end time
@@ -66,6 +69,6 @@ df.insert(loc = 1, column = 'Duration', value = duration)
 
 
 # Slice what you want as output and save as HTML
-df_final=  df[['Start', 'Duration', 'URL']].copy()
+df_final=  df[['Start', 'Duration', 'URL', 'Presenter']].copy()
 filename = f'oreilly_{search_term}_online_educations.html'
 df_final.to_html(filename, render_links=True, escape=False,)
