@@ -41,7 +41,7 @@ for entry in search_results:
     web_url = f' <a href="https://learning.oreilly.com{url}">{title}</a> '
     #web_url = f'https://learning.oreilly.com{url}'
     web_urls.append(web_url)
-    # Grab the author
+    # Grab the author and add it to the list
     author = entry['authors']
     authors.append(author)
 
