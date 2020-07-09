@@ -2,6 +2,7 @@ import requests
 import re
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 # This is the search term you want search on the platform 
 search_term = 'python'
@@ -72,3 +73,8 @@ df.insert(loc = 1, column = 'Duration', value = duration)
 df_final=  df[['Start', 'Duration', 'URL', 'Presenter']].copy()
 filename = f'oreilly_{search_term}_online_educations.html'
 df_final.to_html(filename, render_links=True, escape=False,)
+
+# Append the creation date, time to the HTML
+current_date = datetime.now().date()
+with open(filename, 'a') as file: 
+    file.write(f"The list generated at {current_date}") 
